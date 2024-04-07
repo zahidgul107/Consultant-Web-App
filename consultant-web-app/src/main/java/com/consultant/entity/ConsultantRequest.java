@@ -6,7 +6,15 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Entity
 @Table(name = "consultant_request")
 public class ConsultantRequest {
@@ -15,14 +23,13 @@ public class ConsultantRequest {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long requestId;
 
+	@Column(name ="name")
     private String name;
-
-    @Column(unique = true)
-    private String id;
-
-    // Other fields
+ 
+	@Column(name ="status")
     private String status;
     
+    @Column(name = "e_mail", length = 50)
     private String email;
-
+    
 }
