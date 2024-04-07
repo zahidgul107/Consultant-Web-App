@@ -3,6 +3,7 @@ package com.consultant.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,13 +15,19 @@ import com.consultant.service.ConsultantService;
 @RestController
 @RequestMapping("/consultant")
 public class ConsultantController {
-	
+
 	@Autowired
 	private ConsultantService consultantSer;
-	
+
 	@PutMapping("/updateConsultant")
 	public ResponseEntity<ConsultantDTO> updateConsultant(@RequestBody ConsultantDTO consultantReq) {
 		return new ResponseEntity<ConsultantDTO>(consultantSer.updateConsultant(consultantReq), HttpStatus.OK);
+	}
+
+	// API to retrieve all consultant
+	@GetMapping("/getAllConsultant")
+	public ResponseEntity<?> getAllConsultantRequests() {
+		return ResponseEntity.ok(consultantSer.getAllConsultant());
 	}
 
 }
