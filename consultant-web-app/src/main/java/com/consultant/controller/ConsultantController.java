@@ -23,6 +23,7 @@ public class ConsultantController {
 	@Autowired
 	private ConsultantService consultantSer;
 
+	// API to update consultant details
 	@PutMapping("/updateConsultant")
 	public ResponseEntity<ConsultantDTO> updateConsultant(@RequestBody ConsultantDTO consultantReq) {
 		return new ResponseEntity<ConsultantDTO>(consultantSer.updateConsultant(consultantReq), HttpStatus.OK);
