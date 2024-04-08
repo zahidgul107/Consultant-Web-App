@@ -38,7 +38,7 @@ public class ConsultantController {
 	}
 	
 	// API to get details of a specific consultant by their name or job role (page wise)
-	@GetMapping("/consultants/{search}")
+	@GetMapping("/{search}")
     public ResponseEntity<List<ConsultantResponse>> getConsultantDetails(@RequestParam(defaultValue = "1") int page,
 			@RequestParam(defaultValue = "10") int pageSize, @PathVariable String search) {
         List<ConsultantResponse> consultants = consultantSer.getConsultantsByNameOrJobRole(page, pageSize, search);
