@@ -9,10 +9,12 @@ import org.springframework.stereotype.Service;
 import com.consultant.dto.ConsultantRequestDTO;
 import com.consultant.entity.Consultant;
 import com.consultant.entity.ConsultantRequest;
+import com.consultant.entity.WebAppStatistics;
 import com.consultant.exception.CustomException;
 import com.consultant.payload.response.ConsultantReqResponse;
 import com.consultant.repository.ConsultantRepository;
 import com.consultant.repository.ConsultantRequestRepository;
+import com.consultant.repository.WebAppStatisticsRepository;
 import com.consultant.service.ConsultantRequestService;
 
 @Service
@@ -22,6 +24,8 @@ public class ConsultantRequestServiceImpl implements ConsultantRequestService {
 	private ConsultantRequestRepository consultantReqRepo;
 	@Autowired
 	private ConsultantRepository consultantRepo;
+	@Autowired
+	private WebAppStatisticsRepository statisticRepo;
 
 	@Override
 	public ConsultantReqResponse consultantReq(ConsultantRequestDTO consultantReqDto) {
@@ -61,6 +65,17 @@ public class ConsultantRequestServiceImpl implements ConsultantRequestService {
 		}
 		consultantReq.setStatus(status);
 		Consultant consultant = Consultant.builder().name(consultantReq.getName()).email(consultantReq.getEmail()).build();
+		List<WebAppStatistics> statisticsList = statisticRepo.findAll();
+		WebAppStatistics statistics = null;
+		if (statisticsList.isEmpty()) {
+            statistics = new WebAppStatistics();
+            statistics.setTotalConsultants(1);
+        } else {
+            statistics = statisticsList.get(0);
+            statistics.setTotalConsultants(statistics.getTotalConsultants() + 1);
+        }
+        statisticRepo.save(statistics);
+		statisticRepo.save(statistics);
 		consultantRepo.save(consultant);
 		consultantReqRepo.save(consultantReq);
 	}

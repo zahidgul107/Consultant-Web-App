@@ -16,5 +16,6 @@ public class ConsultantDTO {
     private int age;
     private String phoneNo;
     private String cv;
+    private String jobRole;
 
 }

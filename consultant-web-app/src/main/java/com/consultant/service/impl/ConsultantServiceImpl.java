@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.consultant.dto.ConsultantDTO;
@@ -45,7 +46,23 @@ public class ConsultantServiceImpl implements ConsultantService {
 		List<Consultant> consultantList = consultantRepo.findAll();
 		return consultantList.stream()
 				.map(n -> ConsultantResponse.builder().age(n.getAge()).consultantId(n.getConsultantId()).cv(n.getCv())
-						.email(n.getEmail()).name(n.getName()).phoneNo(n.getPhoneNo()).build())
+						.email(n.getEmail()).name(n.getName()).phoneNo(n.getPhoneNo()).jobRole(n.getJobRole()).build())
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<ConsultantResponse> getConsultantsByNameOrJobRole(String search) {
+		List<Consultant> consultantList = consultantRepo
+				.findByNameContainingIgnoreCaseOrJobRoleContainingIgnoreCase(search, search);
+
+		if (consultantList.isEmpty()) {
+			throw new CustomException("Consultants not found by given search: " + search, "CONSULTANTS_NOT_FOUND",
+					HttpStatus.NOT_FOUND.value());
+		}
+
+		return consultantList.stream()
+				.map(n -> ConsultantResponse.builder().age(n.getAge()).consultantId(n.getConsultantId()).cv(n.getCv())
+						.email(n.getName()).jobRole(n.getJobRole()).name(n.getName()).phoneNo(n.getPhoneNo()).build())
 				.collect(Collectors.toList());
 	}
 
