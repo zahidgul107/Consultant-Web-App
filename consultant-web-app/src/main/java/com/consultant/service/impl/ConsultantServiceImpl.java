@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +45,9 @@ public class ConsultantServiceImpl implements ConsultantService {
 	}
 
 	@Override
-	public List<ConsultantResponse> getAllConsultant() {
-		List<Consultant> consultantList = consultantRepo.findAll();
+	public List<ConsultantResponse> getAllConsultant(int page, int pageSize) {
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<Consultant> consultantList = consultantRepo.findAll(pageable);
 		return consultantList.stream()
 				.map(n -> ConsultantResponse.builder().age(n.getAge()).consultantId(n.getConsultantId()).cv(n.getCv())
 						.email(n.getEmail()).name(n.getName()).phoneNo(n.getPhoneNo()).jobRole(n.getJobRole()).build())
@@ -51,9 +55,10 @@ public class ConsultantServiceImpl implements ConsultantService {
 	}
 
 	@Override
-	public List<ConsultantResponse> getConsultantsByNameOrJobRole(String search) {
-		List<Consultant> consultantList = consultantRepo
-				.findByNameContainingIgnoreCaseOrJobRoleContainingIgnoreCase(search, search);
+	public List<ConsultantResponse> getConsultantsByNameOrJobRole(int page, int pageSize, String search) {
+		Pageable pageable = PageRequest.of(page, pageSize);
+		Page<Consultant> consultantList = consultantRepo
+				.findByNameContainingIgnoreCaseOrJobRoleContainingIgnoreCase(search, search, pageable);
 
 		if (consultantList.isEmpty()) {
 			throw new CustomException("Consultants not found by given search: " + search, "CONSULTANTS_NOT_FOUND",

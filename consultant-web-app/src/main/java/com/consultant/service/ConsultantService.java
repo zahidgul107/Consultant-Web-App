@@ -8,7 +8,7 @@ import com.consultant.payload.response.ConsultantResponse;
 public interface ConsultantService {
 
 	ConsultantDTO updateConsultant(ConsultantDTO consultantReq);
-	List<ConsultantResponse> getAllConsultant();
-	List<ConsultantResponse> getConsultantsByNameOrJobRole(String search);
+	List<ConsultantResponse> getAllConsultant(int page, int pageSize);
+	List<ConsultantResponse> getConsultantsByNameOrJobRole(int page, int pageSize, String search);
 
 }
