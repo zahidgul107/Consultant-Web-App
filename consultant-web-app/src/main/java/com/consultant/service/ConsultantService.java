@@ -9,5 +9,6 @@ public interface ConsultantService {
 
 	ConsultantDTO updateConsultant(ConsultantDTO consultantReq);
 	List<ConsultantResponse> getAllConsultant();
+	List<ConsultantResponse> getConsultantsByNameOrJobRole(String search);
 
 }

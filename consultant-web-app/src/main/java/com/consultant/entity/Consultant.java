@@ -37,5 +37,8 @@ public class Consultant {
 	
 	@Column(name ="e_mail")
     private String email;
+	
+	@Column(name ="job_role")
+	private String jobRole;
 
 }

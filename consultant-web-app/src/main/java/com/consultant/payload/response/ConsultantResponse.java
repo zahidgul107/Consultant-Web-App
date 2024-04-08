@@ -1,7 +1,5 @@
 package com.consultant.payload.response;
 
-import com.consultant.dto.ConsultantDTO;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +17,6 @@ public class ConsultantResponse {
     private String phoneNo;
     private String cv;
     private String email;
+    private String jobRole;
 
 }
