@@ -30,6 +30,13 @@ public class ConsultantRequestServiceImpl implements ConsultantRequestService {
 	@Autowired
 	private WebAppStatisticsRepository statisticRepo;
 
+	/**
+	 * Creates a new consultant request based on the provided DTO.
+	 * 
+	 * @param consultantReqDto The DTO containing the details of the consultant request.
+	 * @return The response containing the details of the newly created consultant request.
+	 * @throws CustomException If the email already exists.
+	 */
 	@Override
 	public ConsultantReqResponse consultantReq(ConsultantRequestDTO consultantReqDto) {
 
@@ -47,6 +54,13 @@ public class ConsultantRequestServiceImpl implements ConsultantRequestService {
 				.requestId(consultantReq.getRequestId()).status(consultantReq.getStatus()).build();
 	}
 
+	/**
+	 * Retrieves a list of consultant requests in a paginated manner.
+	 * 
+	 * @param page     The page number.
+	 * @param pageSize The number of items per page.
+	 * @return A list of consultant request responses.
+	 */
 	@Override
 	public List<ConsultantReqResponse> getAllConsultantRequests(int page, int pageSize) {
 		Pageable pageable = PageRequest.of(page -1, pageSize);
@@ -55,22 +69,31 @@ public class ConsultantRequestServiceImpl implements ConsultantRequestService {
 				.requestId(n.getRequestId()).status(n.getStatus()).build()).collect(Collectors.toList());
 	}
 
+	/**
+	 * Updates the status of a consultant request and updates the total number of consultants in the web app statistics.
+	 * 
+	 * @param requestId The ID of the consultant request to update.
+	 * @param status    The new status of the consultant request.
+	 * @throws CustomException If the consultant request is not found or if the status is already updated.
+	 */
 	@Override
 	public void updateConsultantRequestStatus(Long requestId, String status) {
 		
-		// Consultant request not found check
+		// Checking condition for Consultant request not found
 		ConsultantRequest consultantReq = consultantReqRepo.findById(requestId)
 				.orElseThrow(() -> new CustomException("Consultant Request not found by given requestId: " + requestId,
 						"CONSULTANT_REQUEST_NOT_FOUND", 404));
 		
-		// Check if status is already updated by Admin
+		// Checking condition if the status is already updated.
 		if (!"Requested".equals(consultantReq.getStatus())) {
 			throw new CustomException("Consultant Request Status already updated!", "STATUS_ALREADY_UPDATED", 400);
 		}
 		consultantReq.setStatus(status);
 		Consultant consultant = Consultant.builder().name(consultantReq.getName()).email(consultantReq.getEmail()).build();
 		List<WebAppStatistics> statisticsList = statisticRepo.findAll();
+		
 		WebAppStatistics statistics = null;
+		// Condition for checking if WebStatistics is already saved
 		if (statisticsList.isEmpty()) {
             statistics = new WebAppStatistics();
             statistics.setTotalConsultants(1);
@@ -79,8 +102,9 @@ public class ConsultantRequestServiceImpl implements ConsultantRequestService {
             statistics.setTotalConsultants(statistics.getTotalConsultants() + 1);
         }
         statisticRepo.save(statistics);
-		statisticRepo.save(statistics);
+		// Saving Consultant when status is updated
 		consultantRepo.save(consultant);
+		// Saving updated Consultant Request
 		consultantReqRepo.save(consultantReq);
 	}
 
