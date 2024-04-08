@@ -26,14 +26,15 @@ public class ConsultantRequestController {
 	// API to add consultant requests
 	@PostMapping("/addConsultantReq")
 	public ResponseEntity<ConsultantReqResponse> consultantReq(@RequestBody ConsultantRequestDTO consultantReqDto) {
-		return new ResponseEntity<ConsultantReqResponse>(consultantReqSer.consultantReq(consultantReqDto),
+		return new ResponseEntity<>(consultantReqSer.consultantReq(consultantReqDto),
 				HttpStatus.CREATED);
 	}
 
-	// API to retrieve all consultant requests
+	// API to retrieve page wise consultant requests
 	@GetMapping("/getAllConsultantReq")
-	public ResponseEntity<?> getAllConsultantRequests() {
-		return ResponseEntity.ok(consultantReqSer.getAllConsultantRequests());
+	public ResponseEntity<?> getAllConsultantRequests(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int pageSize) {
+		return ResponseEntity.ok(consultantReqSer.getAllConsultantRequests(page, pageSize));
 	}
 
 	// API to approve or reject a consultant request by ID

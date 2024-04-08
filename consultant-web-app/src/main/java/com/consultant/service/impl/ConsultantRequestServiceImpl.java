@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.consultant.dto.ConsultantRequestDTO;
@@ -45,8 +48,9 @@ public class ConsultantRequestServiceImpl implements ConsultantRequestService {
 	}
 
 	@Override
-	public List<ConsultantReqResponse> getAllConsultantRequests() {
-		List<ConsultantRequest> consultantReqList = consultantReqRepo.findAll();
+	public List<ConsultantReqResponse> getAllConsultantRequests(int page, int pageSize) {
+		Pageable pageable = PageRequest.of(page -1, pageSize);
+		Page<ConsultantRequest> consultantReqList = consultantReqRepo.findAll(pageable);
 		return consultantReqList.stream().map(n -> ConsultantReqResponse.builder().email(n.getEmail()).name(n.getName())
 				.requestId(n.getRequestId()).status(n.getStatus()).build()).collect(Collectors.toList());
 	}

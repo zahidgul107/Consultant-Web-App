@@ -8,7 +8,7 @@ import com.consultant.payload.response.ConsultantReqResponse;
 public interface ConsultantRequestService {
 
 	ConsultantReqResponse consultantReq(ConsultantRequestDTO consultantReqDto);
-	List<ConsultantReqResponse> getAllConsultantRequests();
+	List<ConsultantReqResponse> getAllConsultantRequests(int page, int pageSize);
 	void updateConsultantRequestStatus(Long requestId, String status);
 
 }

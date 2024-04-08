@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.consultant.dto.ConsultantDTO;
@@ -29,16 +30,18 @@ public class ConsultantController {
 		return new ResponseEntity<ConsultantDTO>(consultantSer.updateConsultant(consultantReq), HttpStatus.OK);
 	}
 
-	// API to retrieve all consultant
+	// API to retrieve page wise all consultant
 	@GetMapping("/getAllConsultant")
-	public ResponseEntity<?> getAllConsultantRequests() {
-		return ResponseEntity.ok(consultantSer.getAllConsultant());
+	public ResponseEntity<?> getAllConsultantRequests(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int pageSize) {
+		return ResponseEntity.ok(consultantSer.getAllConsultant(page, pageSize));
 	}
 	
-	// API to get details of a specific consultant by their name or job role
+	// API to get details of a specific consultant by their name or job role (page wise)
 	@GetMapping("/consultants/{search}")
-    public ResponseEntity<List<ConsultantResponse>> getConsultantDetails(@PathVariable String search) {
-        List<ConsultantResponse> consultants = consultantSer.getConsultantsByNameOrJobRole(search);
+    public ResponseEntity<List<ConsultantResponse>> getConsultantDetails(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "10") int pageSize, @PathVariable String search) {
+        List<ConsultantResponse> consultants = consultantSer.getConsultantsByNameOrJobRole(page, pageSize, search);
         return ResponseEntity.ok(consultants);
     }
 
