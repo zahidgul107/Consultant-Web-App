@@ -46,7 +46,7 @@ public class ConsultantServiceImpl implements ConsultantService {
 
 	@Override
 	public List<ConsultantResponse> getAllConsultant(int page, int pageSize) {
-		Pageable pageable = PageRequest.of(page, pageSize);
+		Pageable pageable = PageRequest.of(page - 1, pageSize);
 		Page<Consultant> consultantList = consultantRepo.findAll(pageable);
 		return consultantList.stream()
 				.map(n -> ConsultantResponse.builder().age(n.getAge()).consultantId(n.getConsultantId()).cv(n.getCv())
@@ -56,7 +56,7 @@ public class ConsultantServiceImpl implements ConsultantService {
 
 	@Override
 	public List<ConsultantResponse> getConsultantsByNameOrJobRole(int page, int pageSize, String search) {
-		Pageable pageable = PageRequest.of(page, pageSize);
+		Pageable pageable = PageRequest.of(page - 1, pageSize);
 		Page<Consultant> consultantList = consultantRepo
 				.findByNameContainingIgnoreCaseOrJobRoleContainingIgnoreCase(search, search, pageable);
 
