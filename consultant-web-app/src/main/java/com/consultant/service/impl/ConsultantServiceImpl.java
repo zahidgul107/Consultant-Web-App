@@ -27,6 +27,13 @@ public class ConsultantServiceImpl implements ConsultantService {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	/**
+	 * Updates the details of a consultant based on the provided DTO.
+	 * 
+	 * @param consultantReq The DTO containing the updated details of the consultant.
+	 * @return The updated details of the consultant.
+	 * @throws CustomException If the consultant with the specified ID is not found.
+	 */
 	@Override
 	public ConsultantDTO updateConsultant(ConsultantDTO consultantReq) {
 		Consultant consultant = consultantRepo.findById(consultantReq.getConsultantId())
@@ -44,6 +51,13 @@ public class ConsultantServiceImpl implements ConsultantService {
 		return objectMapper.convertValue(consultant, ConsultantDTO.class);
 	}
 
+	/**
+	 * Retrieves a paginated list of all consultants.
+	 * 
+	 * @param page     The page number.
+	 * @param pageSize The number of items per page.
+	 * @return A paginated list of all consultants.
+	 */
 	@Override
 	public List<ConsultantResponse> getAllConsultant(int page, int pageSize) {
 		Pageable pageable = PageRequest.of(page - 1, pageSize);
@@ -54,12 +68,22 @@ public class ConsultantServiceImpl implements ConsultantService {
 				.collect(Collectors.toList());
 	}
 
+	/**
+	 * Retrieves a paginated list of consultants by name or job role.
+	 * 
+	 * @param page     The page number.
+	 * @param pageSize The number of items per page.
+	 * @param search   The search query by name or job role.
+	 * @return A paginated list of consultants matching the search query.
+	 * @throws CustomException If no consultants are found matching the search query.
+	 */
 	@Override
 	public List<ConsultantResponse> getConsultantsByNameOrJobRole(int page, int pageSize, String search) {
 		Pageable pageable = PageRequest.of(page - 1, pageSize);
 		Page<Consultant> consultantList = consultantRepo
 				.findByNameContainingIgnoreCaseOrJobRoleContainingIgnoreCase(search, search, pageable);
 
+		// Condition for checking if any consultant exists
 		if (consultantList.isEmpty()) {
 			throw new CustomException("Consultants not found by given search: " + search, "CONSULTANTS_NOT_FOUND",
 					HttpStatus.NOT_FOUND.value());
